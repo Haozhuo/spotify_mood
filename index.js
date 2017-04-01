@@ -143,9 +143,10 @@ var getSongs = function(mood){
     });
 }
 
+//先get featured-playlists; then,用api.href(e.g: https://api.spotify.com/v1/users/spotify/playlists/6ftJBzU2LLQcaKefMi7ee7);然后，在"tracks"
+//里找artist id(如果有track number的话)
 getSongs("neutral");
-
-
+//BQDvv0aaqK-KqK_HzVUR1Kzmxu3dZk-F2FJYIQBzCAeqN3Fc5SqHSMm3v8Npg1bGRpfj5EI57DSgNMA69cdq4g
 
 module.export = {
     music_params:emotion,
