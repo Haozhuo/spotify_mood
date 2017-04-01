@@ -140,7 +140,6 @@ var getFeaturedListURL = function(){
           playListID = temp[temp.length-1];
 
           getTrackAndArtistID(href);
-          getSongs();
         });
       }
     });
@@ -179,6 +178,8 @@ var getTrackAndArtistID = function(href){
           artistID = body["tracks"]["items"][0]["track"]["artists"][0]["id"];
           temp = body["tracks"]["items"][0]["track"]["uri"].split(":");
           trackID = (temp[temp.length-1]);
+
+          getSongs();
         });
       }
     });
@@ -203,7 +204,7 @@ var getSongs = function(mood){
 
         // use the access token to access the Spotify Web API
         var token = body.access_token;
-        var recommend_url  = "https://api.spotify.com/v1/recommendations" + "?";
+        var recommend_url  = "https://api.spotify.com/v1/recommendations?seed_artists="+artistID+"&seed_tracks="+trackID+"&";
 
         for(var attr in emotion[mood]){
             recommend_url += (attr+"="+emotion[mood][attr] +"&");
