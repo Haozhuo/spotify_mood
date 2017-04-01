@@ -101,6 +101,90 @@ var request = require('request'); // "Request" library
 var client_id = '8d2ded45568440c8b4e4660c226d922e';
 var client_secret = '251d40faafd24da3976fe03a14b478d8';
 
+var href = "";
+var playListID = "";
+var trackID = "";
+var artistID = "";
+
+
+var getFeaturedListURL = function(){
+    // your application requests authorization
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+      },
+      form: {
+        grant_type: 'client_credentials'
+      },
+      json: true
+    };
+
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+
+        // use the access token to access the Spotify Web API
+        var token = body.access_token;
+        var recommend_url  = "https://api.spotify.com/v1/browse/featured-playlists?country=US&limit=1";
+
+        var options = {
+          url: recommend_url,
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          json: true
+        };
+        request.get(options, function(error, response, body) {
+          href = body["playlists"]["items"][0]["href"];
+          temp = href.split("/");
+          playListID = temp[temp.length-1];
+
+          getTrackAndArtistID(href);
+          getSongs();
+        });
+      }
+    });
+}
+
+
+var getTrackAndArtistID = function(href){
+    // your application requests authorization
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+      },
+      form: {
+        grant_type: 'client_credentials'
+      },
+      json: true
+    };
+
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+
+        // use the access token to access the Spotify Web API
+        var token = body.access_token;
+        var recommend_url  = href;
+
+        var options = {
+          url: recommend_url,
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          json: true
+        };
+
+        request.get(options, function(error, response, body) {
+          artistID = body["tracks"]["items"][0]["track"]["artists"][0]["id"];
+          temp = body["tracks"]["items"][0]["track"]["uri"].split(":");
+          trackID = (temp[temp.length-1]);
+        });
+      }
+    });
+}
+
+
 var getSongs = function(mood){
     // your application requests authorization
     var authOptions = {
@@ -145,8 +229,9 @@ var getSongs = function(mood){
 
 //先get featured-playlists; then,用api.href(e.g: https://api.spotify.com/v1/users/spotify/playlists/6ftJBzU2LLQcaKefMi7ee7);然后，在"tracks"
 //里找artist id(如果有track number的话)
-getSongs("neutral");
+//getSongs("neutral");
 //BQDvv0aaqK-KqK_HzVUR1Kzmxu3dZk-F2FJYIQBzCAeqN3Fc5SqHSMm3v8Npg1bGRpfj5EI57DSgNMA69cdq4g
+getFeaturedListURL();
 
 module.export = {
     music_params:emotion,
