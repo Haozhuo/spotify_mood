@@ -45,7 +45,7 @@ var emotion = {
         "max_energy":0.40,
         "min_popularity":20,
         "min_instrumentalness":0.6,
-        "mode":0
+        "max_mode":0
 
     },
     "happiness": {
@@ -54,22 +54,26 @@ var emotion = {
         "min_tempo":95.0,
         "min_danceability":0.7,
         "min_energy":0.7,
-        "mode":1,
+        "min_mode":1,
         "min_popularity":75
 
     },
     "neutral": {
 
-        "max_valence":0.79,
-        "min_valence":0.40,
-        "max_valence":0.79,
-        "max_tempo":95.0,
-        "min_tempo":75.0,
-        "max_danceability":0.69,
-        "min_daceability":0.35,
-        "max_energy":0.7,
-        "min_energy":0.45,
-        "min_popularity":40
+        // "max_valence":0.79,
+        // "min_valence":0.40,
+        // "max_tempo":95.0,
+        // "min_tempo":75.0,
+        // "max_danceability":0.69,
+        // "min_daceability":0.35,
+        // "max_energy":0.7,
+        // "min_energy":0.45,
+        // "min_popularity":40
+        "target_valence":0.70,
+        "target_tempo":90.0,
+        "target_danceability":0.60,
+        "target_energy":0.6,
+        "target_popularity":60
 
     },
     "sadness": {
@@ -80,7 +84,7 @@ var emotion = {
         "max_energy":0.40,
         "min_popularity":20,
         "min_instrumentalness":0.6,
-        "mode":0
+        "max_mode":0
 
     },
     "surprise": {
@@ -89,7 +93,7 @@ var emotion = {
         "min_tempo":95.0,
         "min_danceability":0.7,
         "min_energy":0.7,
-        "mode":1,
+        "min_mode":1,
         "min_popularity":75
 
     }
@@ -105,9 +109,12 @@ var href = "";
 var playListID = "";
 var trackID = "";
 var artistID = "";
+var song = {};
+var songName = "";
+var artisit = "";
+var albumnName = "";
 
-
-var getFeaturedListURL = function(){
+var getFeaturedListURL = function(mood){
     // your application requests authorization
     var authOptions = {
       url: 'https://accounts.spotify.com/api/token',
@@ -139,14 +146,14 @@ var getFeaturedListURL = function(){
           temp = href.split("/");
           playListID = temp[temp.length-1];
 
-          getTrackAndArtistID(href);
+          getTrackAndArtistID(href,mood);
         });
       }
     });
 }
 
 
-var getTrackAndArtistID = function(href){
+var getTrackAndArtistID = function(href,mood){
     // your application requests authorization
     var authOptions = {
       url: 'https://accounts.spotify.com/api/token',
@@ -179,7 +186,7 @@ var getTrackAndArtistID = function(href){
           temp = body["tracks"]["items"][0]["track"]["uri"].split(":");
           trackID = (temp[temp.length-1]);
 
-          getSongs();
+          getSongs(mood);
         });
       }
     });
@@ -211,8 +218,8 @@ var getSongs = function(mood){
         }
 
         recommend_url += "market=US";
-        console.log(recommend_url);
-        console.log(body.access_token);
+        // console.log(recommend_url);
+        // console.log(body.access_token);
 
         var options = {
           url: recommend_url,
@@ -222,7 +229,11 @@ var getSongs = function(mood){
           json: true
         };
         request.get(options, function(error, response, body) {
-          console.log(body);
+          song = body;
+          songName = body["tracks"][0]["name"];
+          artist = body["tracks"][0]["album"]["artists"][0]["name"];
+          albumnName = body["tracks"][0]["album"]["name"];
+          imgURL = body["tracks"][0]["album"]["images"][0]["url"];
         });
       }
     });
@@ -232,9 +243,11 @@ var getSongs = function(mood){
 //里找artist id(如果有track number的话)
 //getSongs("neutral");
 //BQDvv0aaqK-KqK_HzVUR1Kzmxu3dZk-F2FJYIQBzCAeqN3Fc5SqHSMm3v8Npg1bGRpfj5EI57DSgNMA69cdq4g
-getFeaturedListURL();
+getFeaturedListURL("happiness");
 
 module.export = {
-    music_params:emotion,
-    getSongs:getSongs
+    songName:songName,
+    artist:artist,
+    albumnName:albumnName,
+    albumImgURL:imgURL
 }
