@@ -60,8 +60,8 @@ var emotion = {
         "target_tempo":135.0,
         "target_danceability":0.90,
         "target_energy":0.95,
-        "target_mode":1,
-        "target_popularity":80
+        "min_mode":1,
+        "target_popularity":100
 
 
     },
@@ -146,7 +146,7 @@ var getFeaturedListURL = function(mood){
 
         // use the access token to access the Spotify Web API
         var token = body.access_token;
-        var recommend_url  = "https://api.spotify.com/v1/browse/featured-playlists?country=US&limit=10";
+        var recommend_url  = "https://api.spotify.com/v1/browse/featured-playlists?country=US&limit=50";
 
         var options = {
           url: recommend_url,
