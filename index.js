@@ -60,7 +60,7 @@ var emotion = {
         "target_tempo":135.0,
         "target_danceability":0.90,
         "target_energy":0.95,
-        "min_mode":1,
+        "target_mode":1,
         "target_popularity":100
 
 
@@ -122,6 +122,11 @@ var artist = "";
 var albumnName = "";
 var imgURL = "";
 
+function spotifyException(message){
+    this.message = message;
+    this.name = "spotifyException";
+}
+
 var randomNum = function(max) {
   min = 0;
   max = Math.floor(max);
@@ -129,6 +134,12 @@ var randomNum = function(max) {
 }
 
 var getFeaturedListURL = function(mood){
+    var genre = "";
+    if(mood=="happiness"){
+        var genres = ["party","workout","chill","hiphop"];
+        genre = genres[randomNum(genres.length)];
+    }
+    else if(mood=="")
     // your application requests authorization
     var authOptions = {
       url: 'https://accounts.spotify.com/api/token',
@@ -146,7 +157,7 @@ var getFeaturedListURL = function(mood){
 
         // use the access token to access the Spotify Web API
         var token = body.access_token;
-        var recommend_url  = "https://api.spotify.com/v1/browse/featured-playlists?country=US&limit=50";
+        var recommend_url  = "https://api.spotify.com/v1/browse/categories/"+genre+"/playlists?country=US&limit=50";
 
         var options = {
           url: recommend_url,
@@ -160,6 +171,8 @@ var getFeaturedListURL = function(mood){
           href = body["playlists"]["items"][rand]["href"];
           temp = href.split("/");
           playListID = temp[temp.length-1];
+
+          console.log(token);
 
           getTrackAndArtistID(href,mood);
         });
@@ -246,14 +259,15 @@ var getSongs = function(mood){
           json: true
         };
         request.get(options, function(error, response, body) {
+          try{
           songName = body["tracks"][0]["name"];
           artist = body["tracks"][0]["album"]["artists"][0]["name"];
           albumnName = body["tracks"][0]["album"]["name"];
           imgURL = body["tracks"][0]["album"]["images"][0]["url"];
-
-          console.log(songName);
-          console.log(artist);
-        });
+          } catch(e){
+            console.log("tracks error");
+        }
+      });
       }
     });
 }
@@ -262,7 +276,7 @@ var getSongs = function(mood){
 //里找artist id(如果有track number的话)
 //getSongs("neutral");
 //BQDvv0aaqK-KqK_HzVUR1Kzmxu3dZk-F2FJYIQBzCAeqN3Fc5SqHSMm3v8Npg1bGRpfj5EI57DSgNMA69cdq4g
-getFeaturedListURL("happiness");
+getFeaturedListURL("sadness");
 
 module.export = {
     songName:songName,
