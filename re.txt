@@ -1,24 +1,2 @@
-{ album_type: 'ALBUM',
-  artists: 
-   [ { external_urls: [Object],
-       href: 'https://api.spotify.com/v1/artists/6PXS4YHDkKvl1wkIl4V8DL',
-       id: '6PXS4YHDkKvl1wkIl4V8DL',
-       name: 'Fetty Wap',
-       type: 'artist',
-       uri: 'spotify:artist:6PXS4YHDkKvl1wkIl4V8DL' } ],
-  external_urls: { spotify: 'https://open.spotify.com/album/2gKQvajkEEaDtkqJ8FJ4uw' },
-  href: 'https://api.spotify.com/v1/albums/2gKQvajkEEaDtkqJ8FJ4uw',
-  id: '2gKQvajkEEaDtkqJ8FJ4uw',
-  images: 
-   [ { height: 640,
-       url: 'https://i.scdn.co/image/a67ffa99f1b530d868f381c2fbcd3989f89a04f5',
-       width: 640 },
-     { height: 300,
-       url: 'https://i.scdn.co/image/5aa0bd2874ec6ae0885adc84bb02d5ffce6f8cc2',
-       width: 300 },
-     { height: 64,
-       url: 'https://i.scdn.co/image/1e01dafdf54d489a62ade5778682b3027bf72dc9',
-       width: 64 } ],
-  name: 'Fetty Wap (Deluxe)',
-  type: 'album',
-  uri: 'spotify:album:2gKQvajkEEaDtkqJ8FJ4uw' }
+Fight Night
+Migos

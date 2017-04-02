@@ -49,13 +49,20 @@ var emotion = {
 
     },
     "happiness": {
+        //
+        // "min_valence":0.80,
+        // "min_tempo":95.0,
+        // "min_danceability":0.7,
+        // "min_energy":0.7,
+        // "min_mode":1,
+        // "min_popularity":75,
+        "target_valence":1.0,
+        "target_tempo":135.0,
+        "target_danceability":0.90,
+        "target_energy":0.95,
+        "target_mode":1,
+        "target_popularity":80
 
-        "min_valence":0.80,
-        "min_tempo":95.0,
-        "min_danceability":0.7,
-        "min_energy":0.7,
-        "min_mode":1,
-        "min_popularity":75
 
     },
     "neutral": {
@@ -111,8 +118,15 @@ var trackID = "";
 var artistID = "";
 var song = {};
 var songName = "";
-var artisit = "";
+var artist = "";
 var albumnName = "";
+var imgURL = "";
+
+var randomNum = function(max) {
+  min = 0;
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
 var getFeaturedListURL = function(mood){
     // your application requests authorization
@@ -132,7 +146,7 @@ var getFeaturedListURL = function(mood){
 
         // use the access token to access the Spotify Web API
         var token = body.access_token;
-        var recommend_url  = "https://api.spotify.com/v1/browse/featured-playlists?country=US&limit=1";
+        var recommend_url  = "https://api.spotify.com/v1/browse/featured-playlists?country=US&limit=10";
 
         var options = {
           url: recommend_url,
@@ -142,7 +156,8 @@ var getFeaturedListURL = function(mood){
           json: true
         };
         request.get(options, function(error, response, body) {
-          href = body["playlists"]["items"][0]["href"];
+          var rand = randomNum(body["playlists"]["items"].length)
+          href = body["playlists"]["items"][rand]["href"];
           temp = href.split("/");
           playListID = temp[temp.length-1];
 
@@ -182,8 +197,10 @@ var getTrackAndArtistID = function(href,mood){
         };
 
         request.get(options, function(error, response, body) {
-          artistID = body["tracks"]["items"][0]["track"]["artists"][0]["id"];
-          temp = body["tracks"]["items"][0]["track"]["uri"].split(":");
+          var rand1 = randomNum(body["tracks"]["items"].length);
+          var rand2 = randomNum(body["tracks"]["items"][rand1]["track"]["artists"].length);
+          artistID = body["tracks"]["items"][rand1]["track"]["artists"][rand2]["id"];
+          temp = body["tracks"]["items"][rand1]["track"]["uri"].split(":");
           trackID = (temp[temp.length-1]);
 
           getSongs(mood);
@@ -229,11 +246,13 @@ var getSongs = function(mood){
           json: true
         };
         request.get(options, function(error, response, body) {
-          song = body;
           songName = body["tracks"][0]["name"];
           artist = body["tracks"][0]["album"]["artists"][0]["name"];
           albumnName = body["tracks"][0]["album"]["name"];
           imgURL = body["tracks"][0]["album"]["images"][0]["url"];
+
+          console.log(songName);
+          console.log(artist);
         });
       }
     });
