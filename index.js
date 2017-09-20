@@ -147,8 +147,8 @@ var emotion = {
 
 var request = require('request'); // "Request" library
 
-var client_id = '8d2ded45568440c8b4e4660c226d922e';
-var client_secret = '251d40faafd24da3976fe03a14b478d8';
+var client_id = '#';
+var client_secret = '#';
 
 var href = "";
 var playListID = "";
